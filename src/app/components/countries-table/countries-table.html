@@ -1,0 +1,311 @@
+<div class="p-6 max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <h2 class="text-2xl font-semibold text-slate-800">Countries</h2>
+
+    <div class="flex items-center gap-3 flex-wrap">
+      <button
+        class="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300"
+        (click)="authService.logout()"
+      >
+        Logout
+      </button>
+      <button
+        class="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300"
+        (click)="showUpdateDialog.set(true)"
+        [disabled]="!selected()"
+      >
+        Update
+      </button>
+
+      <button
+        class="cursor-pointer px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:bg-gray-300"
+        (click)="showDeleteDialog.set(true)"
+        [disabled]="!selected()"
+      >
+        Delete
+      </button>
+
+      <select
+        class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+        (change)="handleLimitChange($event)"
+        [value]="pageSize()"
+      >
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
+    <!-- Table Header -->
+    <table class="min-w-full table-fixed">
+      <thead class="bg-gray-50 text-gray-700 text-sm">
+        <!-- HEADER ROW -->
+        <tr>
+          <th class="px-4 py-3 text-left border-b cursor-pointer w-1/5" (click)="sortBy('name')">
+            <div class="flex items-center gap-1">
+              Country
+              @if (sortField() === 'name') {
+                <span class="text-xs">
+                  {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+                </span>
+              }
+            </div>
+          </th>
+
+          <th class="px-4 py-3 text-left border-b cursor-pointer w-1/5" (click)="sortBy('capital')">
+            <div class="flex items-center gap-1">
+              Capital
+              @if (sortField() === 'capital') {
+                <span class="text-xs">
+                  {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+                </span>
+              }
+            </div>
+          </th>
+
+          <th
+            class="px-4 py-3 text-left border-b cursor-pointer w-1/5"
+            (click)="sortBy('continent')"
+          >
+            <div class="flex items-center gap-1">
+              Region
+              @if (sortField() === 'continent') {
+                <span class="text-xs">
+                  {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+                </span>
+              }
+            </div>
+          </th>
+
+          <th
+            class="px-4 py-3 text-left border-b cursor-pointer w-2/5"
+            (click)="sortBy('currency')"
+          >
+            <div class="flex items-center gap-1">
+              Currency
+              @if (sortField() === 'currency') {
+                <span class="text-xs">
+                  {{ sortDirection() === 'asc' ? '▲' : '▼' }}
+                </span>
+              }
+            </div>
+          </th>
+        </tr>
+
+        <!-- FILTER ROW -->
+        <tr class="bg-white border-b">
+          <th class="p-2">
+            <input
+              type="text"
+              placeholder="Search country..."
+              class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              (input)="setFilter('name', $any($event.target).value)"
+            />
+          </th>
+
+          <th class="p-2">
+            <input
+              type="text"
+              placeholder="Search capital..."
+              class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              (input)="setFilter('capital', $any($event.target).value)"
+            />
+          </th>
+
+          <th class="p-2">
+            <input
+              type="text"
+              placeholder="Search region..."
+              class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              (input)="setFilter('continent', $any($event.target).value)"
+            />
+          </th>
+
+          <th class="p-2">
+            <input
+              type="text"
+              placeholder="Search currency..."
+              class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              (input)="setFilter('currency', $any($event.target).value)"
+            />
+          </th>
+        </tr>
+      </thead>
+    </table>
+
+    <!-- Scrollable Body -->
+    <div class="max-h-150 overflow-y-auto">
+      <table class="min-w-full table-fixed">
+        <tbody class="text-sm text-gray-700">
+          @if (!loading()) {
+            @for (country of displayedCountries(); track country.name.common) {
+              <!-- ROW -->
+              <tr
+                class="border-b hover:bg-gray-50 transition cursor-pointer"
+                (mousedown)="selectCountry(country)"
+                [ngClass]="{
+                  'bg-blue-50 border-l-4 border-blue-500': country === selected(),
+                }"
+              >
+                <td class="px-4 py-3 w-1/5">
+                  {{ country | countryField: 'name' }}
+                </td>
+
+                <td class="px-4 py-3 w-1/5">
+                  {{ country | countryField: 'capital' }}
+                </td>
+
+                <td class="px-4 py-3 w-1/5">
+                  {{ country | countryField: 'continent' }}
+                </td>
+
+                <td class="px-4 py-3 w-2/5">
+                  <div class="flex justify-between items-center">
+                    <p>
+                      {{ country | countryField: 'currency' }}
+                    </p>
+
+                    <!-- ssssss -->
+                    <div class="flex justify-center items-center gap-5">
+                      <!-- <span class="text-xl hover:opacity-80 transition">…</span> -->
+                      <span
+                        class="text-2xl transition select-none"
+                        [ngClass]="{
+                          '-rotate-90':
+                            (selected() | countryField: 'name') ===
+                            (country | countryField: 'name'),
+                        }"
+                      >
+                        &#129168;
+                      </span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- PREVIEW -->
+              @if ((selected() | countryField: 'name') === (country | countryField: 'name')) {
+                <tr class="bg-gray-50">
+                  <td colspan="4" class="px-4 py-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
+                      <div><b>Subregion:</b> {{ country | countryField: 'subregion' }}</div>
+                      <div><b>Languages:</b> {{ country | countryField: 'languages' }}</div>
+                      <div><b>Independent:</b> {{ country | countryField: 'independent' }}</div>
+                      <div><b>Status:</b> {{ country | countryField: 'status' }}</div>
+                      <div><b>Continent:</b> {{ country | countryField: 'continent' }}</div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @empty {
+              <tr>
+                <td colspan="4" class="text-center py-6 text-gray-400">No Data</td>
+              </tr>
+            }
+          } @else {
+            <app-countries-skeleton></app-countries-skeleton>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-2 mt-6">
+    <button
+      class="cursor-pointer px-4 py-2 border rounded-lg hover:bg-gray-100 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+      (click)="prevPage()"
+      [disabled]="page() === 1"
+    >
+      Prev
+    </button>
+
+    <span class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+      {{ page() }} / {{ totalPages() }}
+    </span>
+
+    <button
+      class="cursor-pointer px-4 py-2 border rounded-lg hover:bg-gray-100 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+      (click)="nextPage()"
+      [disabled]="page() === totalPages()"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+<!-- Preview -->
+<app-preview-section [country]="selected()"></app-preview-section>
+
+<!-- Update Dialog -->
+@defer (when showUpdateDialog(); prefetch on idle) {
+  <app-update-dialog
+    [country]="selected()"
+    [isOpen]="showUpdateDialog"
+    (save)="updateCountry($event)"
+  ></app-update-dialog>
+}
+
+@defer (when showDeleteDialog(); prefetch on idle) {
+  @if (showDeleteDialog()) {
+    <!-- Overlay -->
+    <div
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+    >
+      <!-- Modal -->
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
+        <!-- Header -->
+        <div class="flex items-center gap-3 border-b p-5">
+          <div
+            class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl"
+          >
+            ⚠️
+          </div>
+
+          <div>
+            <h2 class="text-lg font-semibold text-gray-800">Delete Country</h2>
+            <p class="text-sm text-gray-500">This action cannot be undone.</p>
+          </div>
+
+          <button
+            class="ml-auto text-gray-400 hover:text-gray-700 text-xl"
+            (click)="showDeleteDialog.set(false)"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-5 text-sm text-gray-600">
+          Are you sure you want to delete
+          <span class="font-semibold text-gray-800">
+            {{ selected() | countryField: 'name' }}
+          </span>
+          ?
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-3 border-t p-4 bg-gray-50 rounded-b-2xl">
+          <button
+            class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition cursor-pointer"
+            (click)="showDeleteDialog.set(false)"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition cursor-pointer"
+            (click)="deleteCountry(selected()!)"
+            [disabled]="!selected()"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

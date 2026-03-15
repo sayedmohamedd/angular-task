@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/core/pipes/country-field.pipe.ts", "src/app/pages/not-found"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

@@ -1,0 +1,14 @@
+<tr class="bg-gray-50 transition-all duration-300">
+  <td colspan="4" class="px-4 py-4">
+    <div class="flex gap-6 items-start">
+      <!-- Grid for details -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
+        <div><b>Subregion:</b> {{ country | countryField: 'subregion' }}</div>
+        <div><b>Languages:</b> {{ country | countryField: 'languages' }}</div>
+        <div><b>Independent:</b> {{ country | countryField: 'independent' }}</div>
+        <div><b>Status:</b> {{ country | countryField: 'status' }}</div>
+        <div><b>Continent:</b> {{ country | countryField: 'continent' }}</div>
+      </div>
+    </div>
+  </td>
+</tr>

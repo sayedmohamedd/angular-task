@@ -1,0 +1,143 @@
+<!-- Overlay -->
+@if (isOpen()) {
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+    <!-- Modal -->
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl">
+      <!-- Header -->
+      <div class="flex justify-between items-center border-b p-4">
+        <h2 class="text-lg font-semibold">Update Country</h2>
+        <button class="text-gray-500 hover:text-black text-xl" (click)="isOpen.set(false)">
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <form class="p-6 grid grid-cols-2 gap-4" [formGroup]="formData">
+        <!-- Country Name -->
+        <div formGroupName="name" ]>
+          <label class="block text-sm text-gray-600 mb-1">Country Name</label>
+          <input
+            type="text"
+            [value]="formData.value | countryField: 'name'"
+            formControlName="common"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('name.common')" [name]="'country'" />
+        </div>
+
+        <!-- Capital -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Capital</label>
+          <input
+            type="text"
+            [value]="formData.value | countryField: 'capital'"
+            formControlName="capital"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('capital')" [name]="'capital'" />
+        </div>
+
+        <!-- Region -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Region</label>
+          <input
+            type="text"
+            [value]="formData.value | countryField: 'continent'"
+            formControlName="continents"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('continents')" [name]="'Region'" />
+        </div>
+
+        <!-- Subregion -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Subregion</label>
+          <input
+            type="text"
+            [value]="formData.value | countryField: 'subregion'"
+            formControlName="subregion"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('subregion')" [name]="'subregion'" />
+        </div>
+
+        <!-- Currency Dropdown -->
+        <div formGroupName="currencies">
+          <label class="block text-sm text-gray-600 mb-1">Currency</label>
+          <select
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            formControlName="code"
+          >
+            @for (item of currencies() | currenciesPipe; track item[0]) {
+              <option [ngValue]="item[0]">{{item[1]}}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Languages -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Languages</label>
+          <input
+            type="text"
+            [value]="formData.value?.languages"
+            formControlName="languages"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('languages')" [name]="'languages'" />
+        </div>
+
+        <!-- Independent -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Independent</label>
+          <select
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            formControlName="independent"
+          >
+            <option [ngValue]="true" [selected]="formData.value?.independent">Yes</option>
+            <option [ngValue]="false" [selected]="!formData.value?.independent">No</option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Status</label>
+          <select
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option [selected]="formData.value?.status">officially-assigned</option>
+            <option [selected]="!formData.value?.status">user-assigned</option>
+          </select>
+        </div>
+
+        <!-- Continent -->
+        <!-- <div class="col-span-2">
+          <label class="block text-sm text-gray-600 mb-1">Continent</label>
+          <input
+            type="text"
+            [value]="formData.value | countryField: 'continent'"
+            formControlName="continents"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <app-form-error [label]="formData.get('continents')" [name]="'Continent'" />
+        </div> -->
+      </form>
+
+      <!-- Footer -->
+      <div class="flex justify-end gap-3 border-t p-4">
+        <button
+          class="px-4 py-2 border rounded hover:bg-gray-100 cursor-pointer"
+          (click)="isOpen.set(false)"
+        >
+          Cancel
+        </button>
+        <button
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+          (click)="onSave()"
+          [ngClass]="{ 'cursor-not-allowed': !formData.valid }"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+}
