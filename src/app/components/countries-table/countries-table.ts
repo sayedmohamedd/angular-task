@@ -101,9 +101,12 @@ export class CountriesTable implements OnInit {
   showUpdateDialog = signal(false);
   showDeleteDialog = signal(false);
 
-  // SORT
-  sortBy(field: string) {
-    if (this.sortField() === field) {
+  // SORT (direction optional: when provided e.g. from mobile dropdown, set both; otherwise toggle)
+  sortBy(field: string, direction?: 'asc' | 'desc') {
+    if (direction !== undefined) {
+      this.sortField.set(field);
+      this.sortDirection.set(direction);
+    } else if (this.sortField() === field) {
       this.sortDirection.update((d) => (d === 'asc' ? 'desc' : 'asc'));
     } else {
       this.sortField.set(field);

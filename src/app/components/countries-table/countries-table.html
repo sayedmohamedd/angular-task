@@ -36,10 +36,28 @@
     </div>
   </div>
 
-  <!-- Mobile filters -->
-  <div class="block md:hidden mb-4 p-3 bg-white rounded-xl border border-gray-200">
-    <p class="text-xs font-medium text-gray-500 mb-2">Filters</p>
-    <div class="grid grid-cols-2 gap-2">
+  <!-- Mobile filters + sort -->
+  <div class="block md:hidden mb-4 space-y-4">
+    <div class="p-3 bg-white rounded-xl border border-gray-200">
+      <p class="text-xs font-medium text-gray-500 mb-2">Sort by</p>
+      <select
+        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none bg-white"
+        [value]="sortField() + '-' + sortDirection()"
+        (change)="sortBy($any($event.target).value.split('-')[0], $any($event.target).value.split('-')[1])"
+      >
+        <option value="name-asc">Country (A → Z)</option>
+        <option value="name-desc">Country (Z → A)</option>
+        <option value="capital-asc">Capital (A → Z)</option>
+        <option value="capital-desc">Capital (Z → A)</option>
+        <option value="continent-asc">Region (A → Z)</option>
+        <option value="continent-desc">Region (Z → A)</option>
+        <option value="currency-asc">Currency (A → Z)</option>
+        <option value="currency-desc">Currency (Z → A)</option>
+      </select>
+    </div>
+    <div class="p-3 bg-white rounded-xl border border-gray-200">
+      <p class="text-xs font-medium text-gray-500 mb-2">Filters</p>
+      <div class="grid grid-cols-2 gap-2">
       <input
         type="text"
         placeholder="Country"
@@ -64,6 +82,7 @@
         class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
         (input)="setFilter('currency', $any($event.target).value)"
       />
+    </div>
     </div>
   </div>
 
