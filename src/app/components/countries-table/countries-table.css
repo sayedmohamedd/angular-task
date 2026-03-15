@@ -3,7 +3,4 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Reserve space for scrollbar so table doesn't show white strip on the right */
-.countries-table-scroll {
-  scrollbar-gutter: stable;
-}
+/* Table fills scroll area; no reserved gutter so no white strip on the right */
