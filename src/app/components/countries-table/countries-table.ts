@@ -23,6 +23,8 @@ export class CountriesTable implements OnInit {
   // DATA
   countries = signal<Country[]>([]);
   loading = signal(true);
+  /** Used for mobile skeleton placeholder count */
+  readonly mobileSkeletonRows = [1, 2, 3, 4, 5];
 
   // PAGINATION
   page = signal(1);
@@ -177,7 +179,6 @@ export class CountriesTable implements OnInit {
     // Format data
     formData.currencies = {[formData.currencies.code]: {name:formData.currencies.name}};
     formData.languages = { '': formData.languages };
-    // independent is already boolean from form (ngValue true/false)
 
     // Update
     this.countries.update((countries) => {
