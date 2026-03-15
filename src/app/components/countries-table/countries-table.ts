@@ -168,6 +168,7 @@ export class CountriesTable implements OnInit {
   // DELETE
   deleteCountry(country: Country | any) {
     this.countries.update((c) => c.filter((item) => item.name.common !== country.name.common));
+    this.selected.set(null);
     this.showDeleteDialog.set(false);
   }
 
@@ -176,7 +177,7 @@ export class CountriesTable implements OnInit {
     // Format data
     formData.currencies = {[formData.currencies.code]: {name:formData.currencies.name}};
     formData.languages = { '': formData.languages };
-    formData.independent = formData.independent === 'Yes' ? true : false;
+    // independent is already boolean from form (ngValue true/false)
 
     // Update
     this.countries.update((countries) => {

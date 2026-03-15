@@ -33,8 +33,8 @@ export class UpdateDialog {
       languages: ['', Validators.required],
       currencies: this._formBuilder.group({
         code: ['', Validators.required],
-        name: ['', Validators.required],
-        symbol: ['', Validators.required],
+        name: [''],
+        symbol: [''],
       }),
     });
   }
@@ -53,7 +53,7 @@ export class UpdateDialog {
         continents: value.continents,
         languages: Object.values(value.languages).join(', '),
         currencies: {
-          code: '',
+          code: (Object.keys(value.currencies ?? {})?.[0] ?? '').toLowerCase(),
           name: '',
           symbol: '',
         },

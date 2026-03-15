@@ -14,7 +14,7 @@
       <!-- Body -->
       <form class="p-6 grid grid-cols-2 gap-4" [formGroup]="formData">
         <!-- Country Name -->
-        <div formGroupName="name" ]>
+        <div formGroupName="name">
           <label class="block text-sm text-gray-600 mb-1">Country Name</label>
           <input
             type="text"
@@ -69,7 +69,7 @@
             formControlName="code"
           >
             @for (item of currencies() | currenciesPipe; track item[0]) {
-              <option [ngValue]="item[0]">{{item[1]}}</option>
+              <option [ngValue]="item[0]">{{ item[1] }}</option>
             }
           </select>
         </div>
@@ -93,8 +93,8 @@
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             formControlName="independent"
           >
-            <option [ngValue]="true" [selected]="formData.value?.independent">Yes</option>
-            <option [ngValue]="false" [selected]="!formData.value?.independent">No</option>
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
           </select>
         </div>
 
@@ -103,9 +103,10 @@
           <label class="block text-sm text-gray-600 mb-1">Status</label>
           <select
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            formControlName="status"
           >
-            <option [selected]="formData.value?.status">officially-assigned</option>
-            <option [selected]="!formData.value?.status">user-assigned</option>
+            <option [ngValue]="'officially-assigned'">officially-assigned</option>
+            <option [ngValue]="'user-assigned'">user-assigned</option>
           </select>
         </div>
 
