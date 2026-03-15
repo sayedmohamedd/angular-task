@@ -3,21 +3,22 @@ import { Auth } from '../../services/auth.service';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormError } from '../../components/shared/form-error/form-error';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, FormError],
+  imports: [ReactiveFormsModule, FormError, NgClass],
   templateUrl: './login.component.html',
 })
 export class Login {
   formData: FormGroup;
-  submitted = false;
+  isLoading = false;
 
   constructor(
     private _authService: Auth,
     private _formBuilder: FormBuilder,
-    private router: Router,
+    private _router: Router,
   ) {
     this.formData = this._formBuilder.group({
       username: ['', Validators.required],
@@ -26,23 +27,26 @@ export class Login {
   }
 
   login() {
-    this.submitted = true;
-
     if (this.formData.invalid) {
-      this.username?.markAsTouched();
-      this.password?.markAsTouched();
+      this.formData.markAllAsTouched();
       return;
     }
 
+    this.isLoading = true;
+
     const { username, password } = this.formData.value;
 
-    if (username === 'admin' && password === 'admin') {
-      this._authService.setToken('token');
-      this.router.navigate(['dashboard']);
-    } else {
-      this.username?.setErrors({ invalid: true });
-      this.password?.setErrors({ invalid: true });
-    }
+    // Demo logic (replace with real API)
+    setTimeout(() => {
+      if (username === 'admin' && password === 'admin') {
+        this._authService.setToken('token');
+        this._router.navigate(['dashboard']);
+      } else {
+        this.formData.setErrors({ invalidCredentials: true });
+      }
+
+      this.isLoading = false;
+    }, 800);
   }
 
   // Getters

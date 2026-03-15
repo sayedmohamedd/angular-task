@@ -1,49 +1,60 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
   <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
+
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+      Login
+    </h2>
 
     <form [formGroup]="formData" (ngSubmit)="login()" class="space-y-5">
+
       <!-- Username -->
       <div>
-        <label class="block text-gray-700 mb-1" for="username"> Username </label>
+        <label class="block text-gray-700 mb-1">Username</label>
 
         <input
           type="text"
-          id="username"
           formControlName="username"
-          placeholder="Enter your username"
-          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 transition"
+          [ngClass]="{
+            'border-red-500': username?.invalid && username?.touched
+          }"
         />
-        <app-form-error [label]="username" [name]="'username'"></app-form-error>
+
+        <app-form-error [label]="username" name="username" />
       </div>
 
       <!-- Password -->
       <div>
-        <label class="block text-gray-700 mb-1" for="password"> Password </label>
+        <label class="block text-gray-700 mb-1">Password</label>
+
         <input
           type="password"
-          id="password"
           formControlName="password"
-          placeholder="Enter your password"
-          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 transition"
+          [ngClass]="{
+            'border-red-500': password?.invalid && password?.touched
+          }"
         />
-        <app-form-error [label]="password" [name]="'password'"></app-form-error>
+
+        <app-form-error [label]="password" name="password" />
       </div>
+
+      <!-- Global Error -->
+      @if (formData.errors?.['invalidCredentials']) {
+        <div class="text-red-500 text-center text-sm">
+          Invalid username or password
+        </div>
+      }
 
       <!-- Button -->
       <button
         type="submit"
-        [disabled]="formData.invalid"
-
-        class="cursor-pointer w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="formData.invalid || isLoading"
+        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Login
+        {{ isLoading ? 'Loading...' : 'Login' }}
       </button>
-    </form>
 
-    <!-- Global Error After Submit -->
-    @if (submitted && formData.invalid) {
-      <div class="mt-4 text-red-500 text-center text-sm">Invalid username or password</div>
-    }
+    </form>
   </div>
 </div>
