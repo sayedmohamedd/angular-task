@@ -7,10 +7,11 @@ import { Country } from '../../models/country.model';
 import { UpdateDialog } from '../update-dialog/update-dialog';
 import { CountryFieldPipe } from '../../core/pipes/country-field.pipe';
 import { Auth } from '../../services/auth.service';
+import { CountriesChartComponent } from '../countries-chart/countries-chart.component';
 
 @Component({
   selector: 'app-countries-table',
-  imports: [CommonModule, CountriesSkeleton, PreviewSection, UpdateDialog, CountryFieldPipe],
+  imports: [CommonModule, CountriesSkeleton, PreviewSection, UpdateDialog, CountryFieldPipe, CountriesChartComponent],
   templateUrl: './countries-table.html',
   styleUrls: ['./countries-table.css'],
 })
@@ -30,13 +31,11 @@ export class CountriesTable implements OnInit {
   page = signal(1);
   pageSize = signal(10);
 
-  totalPages = computed(() => Math.ceil(this.countries().length / this.pageSize()));
-
   // SORTING
   sortField = signal<string>('name');
   sortDirection = signal<'asc' | 'desc'>('asc');
 
-  // filter
+  // filter from search inputs
   filters = signal({
     name: '',
     capital: '',
@@ -44,8 +43,8 @@ export class CountriesTable implements OnInit {
     currency: '',
   });
 
-  // DISPLAYED DATA
-  displayedCountries = computed(() => {
+  // FILTERED + SORTED DATA (بدون pagination)
+  filteredSortedCountries = computed(() => {
     let data = [...this.countries()];
 
     const f = this.filters();
@@ -78,13 +77,24 @@ export class CountriesTable implements OnInit {
       return direction === 'asc' ? result : -result;
     });
 
-    // PAGINATION
+    return data;
+  });
+
+  // TOTAL PAGES بناءً على الداتا بعد الفلترة
+  totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.filteredSortedCountries().length / this.pageSize())),
+  );
+
+  // DISPLAYED DATA (مع pagination)
+  displayedCountries = computed(() => {
+    const data = this.filteredSortedCountries();
+
     const start = (this.page() - 1) * this.pageSize();
     const end = start + this.pageSize();
-
     return data.slice(start, end);
   });
 
+  // Function to get filter from html
   setFilter(field: string, value: string) {
     this.filters.update((f) => ({
       ...f,
@@ -94,7 +104,7 @@ export class CountriesTable implements OnInit {
     this.page.set(1);
   }
 
-  // SELECTED ROW
+  // SELECTED ROW (Country)
   selected = signal<Country | null>(null);
 
   // Pop Up
@@ -115,6 +125,8 @@ export class CountriesTable implements OnInit {
     this.selected.set(null);
   }
 
+
+  // Data Formating (like Pipe)
   getFieldValue(country: Country, field: string): any {
     switch (field) {
       case 'name':
@@ -158,10 +170,11 @@ export class CountriesTable implements OnInit {
   }
 
   handleLimitChange(event: any) {
+    // using + operator to convert string to number
     this.changePageSize(+event.target.value);
   }
 
-  // SELECT ROW
+  // Function to handle SELECT ROW from html
   selectCountry(country: Country) {
     if (this.selected()?.name.common === country?.name?.common) {
       this.selected.set(null);
@@ -170,14 +183,19 @@ export class CountriesTable implements OnInit {
     this.selected.set(country);
   }
 
-  // DELETE
+  handleDbClick(country:Country){
+    this.selectCountry(country)
+    this.showUpdateDialog.set(true)
+  }
+
+  // DELETE Country
   deleteCountry(country: Country | any) {
     this.countries.update((c) => c.filter((item) => item.name.common !== country.name.common));
     this.selected.set(null);
     this.showDeleteDialog.set(false);
   }
 
-  // UPDATE
+  // UPDATE Country
   updateCountry(formData: any) {
     // Format data
     formData.currencies = {[formData.currencies.code]: {name:formData.currencies.name}};

@@ -5,7 +5,7 @@
 
     <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
       <button
-        class="cursor-pointer px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300"
+        class="cursor-pointer px-3 py-2 sm:px-4 sm:py-2 text-sm sm:text-base bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:bg-gray-300"
         (click)="authService.logout()"
       >
         Logout
@@ -43,7 +43,9 @@
       <select
         class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none bg-white"
         [value]="sortField() + '-' + sortDirection()"
-        (change)="sortBy($any($event.target).value.split('-')[0], $any($event.target).value.split('-')[1])"
+        (change)="
+          sortBy($any($event.target).value.split('-')[0], $any($event.target).value.split('-')[1])
+        "
       >
         <option value="name-asc">Country (A → Z)</option>
         <option value="name-desc">Country (Z → A)</option>
@@ -58,31 +60,31 @@
     <div class="p-3 bg-white rounded-xl border border-gray-200">
       <p class="text-xs font-medium text-gray-500 mb-2">Filters</p>
       <div class="grid grid-cols-2 gap-2">
-      <input
-        type="text"
-        placeholder="Country"
-        class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-        (input)="setFilter('name', $any($event.target).value)"
-      />
-      <input
-        type="text"
-        placeholder="Capital"
-        class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-        (input)="setFilter('capital', $any($event.target).value)"
-      />
-      <input
-        type="text"
-        placeholder="Region"
-        class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-        (input)="setFilter('continent', $any($event.target).value)"
-      />
-      <input
-        type="text"
-        placeholder="Currency"
-        class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
-        (input)="setFilter('currency', $any($event.target).value)"
-      />
-    </div>
+        <input
+          type="text"
+          placeholder="Country"
+          class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          (input)="setFilter('name', $any($event.target).value)"
+        />
+        <input
+          type="text"
+          placeholder="Capital"
+          class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          (input)="setFilter('capital', $any($event.target).value)"
+        />
+        <input
+          type="text"
+          placeholder="Region"
+          class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          (input)="setFilter('continent', $any($event.target).value)"
+        />
+        <input
+          type="text"
+          placeholder="Currency"
+          class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          (input)="setFilter('currency', $any($event.target).value)"
+        />
+      </div>
     </div>
   </div>
 
@@ -93,7 +95,10 @@
         <thead class="bg-gray-50 text-gray-700 text-sm sticky top-0 z-10">
           <!-- HEADER ROW -->
           <tr>
-            <th class="px-3 py-2 md:px-4 md:py-3 text-left border-b cursor-pointer w-1/5 bg-gray-50" (click)="sortBy('name')">
+            <th
+              class="px-3 py-2 md:px-4 md:py-3 text-left border-b cursor-pointer w-1/5 bg-gray-50"
+              (click)="sortBy('name')"
+            >
               <div class="flex items-center gap-1">
                 Country
                 @if (sortField() === 'name') {
@@ -103,7 +108,10 @@
                 }
               </div>
             </th>
-            <th class="px-3 py-2 md:px-4 md:py-3 text-left border-b cursor-pointer w-1/5 bg-gray-50" (click)="sortBy('capital')">
+            <th
+              class="px-3 py-2 md:px-4 md:py-3 text-left border-b cursor-pointer w-1/5 bg-gray-50"
+              (click)="sortBy('capital')"
+            >
               <div class="flex items-center gap-1">
                 Capital
                 @if (sortField() === 'capital') {
@@ -183,6 +191,7 @@
               <tr
                 class="border-b hover:bg-gray-50 transition cursor-pointer"
                 (mousedown)="selectCountry(country)"
+                (dblclick)="handleDbClick(country)"
                 [ngClass]="{
                   'bg-blue-50 border-l-4 border-blue-500': country === selected(),
                 }"
@@ -198,17 +207,29 @@
                 </td>
                 <td class="px-3 py-2 md:px-4 md:py-3 w-2/5">
                   <div class="flex items-center gap-2 min-w-0 w-full">
-                    <span class="min-w-0 truncate flex-1">{{ country | countryField: 'currency' }}</span>
+                    <span class="min-w-0 truncate flex-1">{{
+                      country | countryField: 'currency'
+                    }}</span>
                     <span
                       class="shrink-0 inline-flex transition select-none"
                       [ngClass]="{
                         '-rotate-90':
-                          (selected() | countryField: 'name') ===
-                          (country | countryField: 'name'),
+                          (selected() | countryField: 'name') === (country | countryField: 'name'),
                       }"
                     >
-                      <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      <svg
+                        class="w-5 h-5 text-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     </span>
                   </div>
@@ -250,28 +271,50 @@
           class="bg-white rounded-xl border-2 transition cursor-pointer touch-manipulation"
           [ngClass]="{
             'border-blue-500 bg-blue-50/50': country === selected(),
-            'border-gray-200 hover:border-gray-300': country !== selected()
+            'border-gray-200 hover:border-gray-300': country !== selected(),
           }"
           (click)="selectCountry(country)"
+          (dblclick)="handleDbClick(country)"
         >
           <div class="p-4">
             <div class="flex justify-between items-start gap-2">
               <div class="min-w-0 flex-1">
-                <p class="font-semibold text-slate-800 truncate">{{ country | countryField: 'name' }}</p>
-                <p class="text-sm text-gray-500 mt-0.5">{{ country | countryField: 'capital' }} · {{ country | countryField: 'continent' }}</p>
+                <p class="font-semibold text-slate-800 truncate">
+                  {{ country | countryField: 'name' }}
+                </p>
+                <p class="text-sm text-gray-500 mt-0.5">
+                  {{ country | countryField: 'capital' }} ·
+                  {{ country | countryField: 'continent' }}
+                </p>
                 <p class="text-sm text-gray-600 mt-1">{{ country | countryField: 'currency' }}</p>
               </div>
               <span
                 class="shrink-0 inline-flex transition"
-                [ngClass]="{ '-rotate-90': (selected() | countryField: 'name') === (country | countryField: 'name') }"
+                [ngClass]="{
+                  '-rotate-90':
+                    (selected() | countryField: 'name') === (country | countryField: 'name'),
+                }"
               >
-                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </span>
             </div>
             @if ((selected() | countryField: 'name') === (country | countryField: 'name')) {
-              <div class="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 gap-2 text-sm text-gray-700">
+              <div
+                class="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 gap-2 text-sm text-gray-700"
+              >
                 <div><b>Subregion:</b> {{ country | countryField: 'subregion' }}</div>
                 <div><b>Languages:</b> {{ country | countryField: 'languages' }}</div>
                 <div><b>Independent:</b> {{ country | countryField: 'independent' }}</div>
@@ -281,7 +324,11 @@
           </div>
         </article>
       } @empty {
-        <div class="bg-white rounded-xl border border-gray-200 p-6 text-center text-gray-400 text-sm">No Data</div>
+        <div
+          class="bg-white rounded-xl border border-gray-200 p-6 text-center text-gray-400 text-sm"
+        >
+          No Data
+        </div>
       }
     } @else {
       @for (row of mobileSkeletonRows; track row) {
@@ -319,6 +366,11 @@
 <!-- Preview -->
 <app-preview-section [country]="selected()"></app-preview-section>
 
+<!-- Charts -->
+<div class="mt-6">
+  <app-countries-chart [countries]="countries()"></app-countries-chart>
+</div>
+
 <!-- Update Dialog -->
 @defer (when showUpdateDialog(); prefetch on idle) {
   <app-update-dialog
@@ -328,6 +380,7 @@
   ></app-update-dialog>
 }
 
+<!-- Delete Pop Up -->
 @defer (when showDeleteDialog(); prefetch on idle) {
   @if (showDeleteDialog()) {
     <!-- Overlay -->

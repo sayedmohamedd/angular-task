@@ -1,0 +1,21 @@
+<div class="container mx-auto bg-white rounded-xl shadow border border-gray-200 p-4 h-80 my-6">
+  <!-- <h2 class="text-lg font-semibold text-slate-800 mb-3">
+    Countries per Region
+  </h2> -->
+
+  @if (countries.length) {
+    <div class="h-full">
+      <canvas
+        baseChart
+        [type]="'bar'"
+        [data]="chartData()"
+        [options]="chartOptions"
+      ></canvas>
+    </div>
+  } @else {
+    <div class="h-full flex items-center justify-center text-gray-400 text-sm">
+      No data to visualize
+    </div>
+  }
+</div>
+
