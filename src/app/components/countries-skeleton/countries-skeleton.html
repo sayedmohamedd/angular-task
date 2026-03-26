@@ -1,4 +1,4 @@
-<!-- Skeleton -->
+<!-- Skeleton
 @for (row of rows; track $index) {
   <tr class="animate-pulse">
     <td class="p-3 border-b w-1/4">
@@ -15,6 +15,37 @@
 
     <td class="p-3 border-b w-1/4">
       <div class="h-4 w-full bg-gray-300 rounded"></div>
+    </td>
+  </tr>
+} -->
+
+<!-- Skeleton -->
+@for (row of rows; track $index) {
+  <tr class="animate-pulse">
+    <!-- Country -->
+    <td class="px-4 py-3 border-b w-1/5">
+      <div class="flex items-center gap-3 w-full">
+        <div class="w-6 h-4 bg-gray-300 rounded shimmer"></div>
+        <div class="h-4 w-3/4 bg-gray-300 rounded shimmer"></div>
+      </div>
+    </td>
+
+    <!-- Capital -->
+    <td class="px-4 py-3 border-b w-1/5">
+      <div class="h-4 w-2/3 bg-gray-300 rounded shimmer"></div>
+    </td>
+
+    <!-- Region -->
+    <td class="px-4 py-3 border-b w-1/5">
+      <div class="h-4 w-1/2 bg-gray-300 rounded shimmer"></div>
+    </td>
+
+    <!-- Currency -->
+    <td class="px-4 py-3 border-b w-2/5">
+      <div class="flex items-center justify-between w-full">
+        <div class="h-4 w-3/4 bg-gray-300 rounded shimmer"></div>
+        <div class="w-4 h-4 bg-gray-300 rounded shimmer"></div>
+      </div>
     </td>
   </tr>
 }

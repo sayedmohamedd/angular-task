@@ -88,7 +88,7 @@
     </div>
   </div>
 
-  <!-- Desktop table: single table + sticky header so no width mismatch / white strip -->
+  <!-- Desktop table -->
   <div class="hidden md:block overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
     <div class="max-h-150 overflow-y-auto countries-table-scroll">
       <table class="min-w-full table-fixed w-full">
@@ -184,6 +184,7 @@
             </th>
           </tr>
         </thead>
+        <!-- TABLE BODY -->
         <tbody class="text-sm text-gray-700">
           @if (!loading()) {
             @for (country of displayedCountries(); track country.name.common) {
@@ -256,14 +257,14 @@
               </tr>
             }
           } @else {
-            <app-countries-skeleton></app-countries-skeleton>
+            <ng-container *ngTemplateOutlet="skeletonTable"></ng-container>
           }
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Mobile cards (visible only on small screens) -->
+  <!-- Mobile cards -->
   <div class="block md:hidden space-y-3">
     @if (!loading()) {
       @for (country of displayedCountries(); track country.name.common) {
@@ -440,3 +441,26 @@
     </div>
   }
 }
+
+<!-- skeletonTpl -->
+<ng-template #skeletonTable>
+  @for (row of [1, 2, 3, 4, 5, 6, 7, 8]; track $index) {
+    <tr class="animate-pulse">
+      <td class="px-4 py-3 border-b w-1/5">
+        <div class="h-4 w-3/4 bg-gray-300 rounded shimmer"></div>
+      </td>
+      <td class="px-4 py-3 border-b w-1/5">
+        <div class="h-4 w-2/3 bg-gray-300 rounded shimmer"></div>
+      </td>
+      <td class="px-4 py-3 border-b w-1/5">
+        <div class="h-4 w-1/2 bg-gray-300 rounded shimmer"></div>
+      </td>
+      <td class="px-4 py-3 border-b w-2/5">
+        <div class="flex justify-between">
+          <div class="h-4 w-3/4 bg-gray-300 rounded shimmer"></div>
+          <div class="w-4 h-4 bg-gray-300 rounded shimmer"></div>
+        </div>
+      </td>
+    </tr>
+  }
+</ng-template>

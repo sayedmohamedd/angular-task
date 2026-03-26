@@ -1,7 +1,6 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { CountriesService } from '../../services/countries.service';
 import { CommonModule } from '@angular/common';
-import { CountriesSkeleton } from '../countries-skeleton/countries-skeleton';
 import { PreviewSection } from '../preview-section/preview-section';
 import { Country } from '../../models/country.model';
 import { UpdateDialog } from '../update-dialog/update-dialog';
@@ -11,7 +10,7 @@ import { CountriesChartComponent } from '../countries-chart/countries-chart.comp
 
 @Component({
   selector: 'app-countries-table',
-  imports: [CommonModule, CountriesSkeleton, PreviewSection, UpdateDialog, CountryFieldPipe, CountriesChartComponent],
+  imports: [CommonModule, PreviewSection, UpdateDialog, CountryFieldPipe, CountriesChartComponent],
   templateUrl: './countries-table.html',
   styleUrls: ['./countries-table.css'],
 })
@@ -24,6 +23,7 @@ export class CountriesTable implements OnInit {
   // DATA
   countries = signal<Country[]>([]);
   loading = signal(true);
+  error = signal('');
   /** Used for mobile skeleton placeholder count */
   readonly mobileSkeletonRows = [1, 2, 3, 4, 5];
 
@@ -231,10 +231,13 @@ export class CountriesTable implements OnInit {
         this.countries.set(data);
       },
       error: (err: any) => {
+        this.loading.set(false);
+        this.error.set(err?.message || 'Something went Wrong');
         console.error(err);
       },
       complete: () => {
         this.loading.set(false);
+        this.error.set('');
       },
     });
   }
