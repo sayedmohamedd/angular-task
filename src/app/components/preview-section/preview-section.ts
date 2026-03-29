@@ -7,6 +7,5 @@ import { CountryFieldPipe } from '../../core/pipes/country-field.pipe';
   templateUrl: './preview-section.html',
 })
 export class PreviewSection {
-  constructor() {}
   @Input() country: any;
 }
