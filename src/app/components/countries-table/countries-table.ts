@@ -99,7 +99,6 @@ export class CountriesTable implements OnInit {
       ...f,
       [field]: value,
     }));
-
     this.page.set(1);
   }
 

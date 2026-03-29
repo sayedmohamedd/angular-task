@@ -64,24 +64,28 @@
           type="text"
           placeholder="Country"
           class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          [value]="filters().name"
           (input)="setFilter('name', $any($event.target).value)"
         />
         <input
           type="text"
           placeholder="Capital"
           class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          [value]="filters().capital"
           (input)="setFilter('capital', $any($event.target).value)"
         />
         <input
           type="text"
           placeholder="Region"
           class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          [value]="filters().continent"
           (input)="setFilter('continent', $any($event.target).value)"
         />
         <input
           type="text"
           placeholder="Currency"
           class="w-full border border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+          [value]="filters().currency"
           (input)="setFilter('currency', $any($event.target).value)"
         />
       </div>
@@ -155,6 +159,7 @@
                 type="text"
                 placeholder="Search country..."
                 class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                [value]="filters().name"
                 (input)="setFilter('name', $any($event.target).value)"
               />
             </th>
@@ -163,6 +168,7 @@
                 type="text"
                 placeholder="Search capital..."
                 class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                [value]="filters().capital"
                 (input)="setFilter('capital', $any($event.target).value)"
               />
             </th>
@@ -171,6 +177,7 @@
                 type="text"
                 placeholder="Search region..."
                 class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                [value]="filters().continent"
                 (input)="setFilter('continent', $any($event.target).value)"
               />
             </th>
@@ -179,6 +186,7 @@
                 type="text"
                 placeholder="Search currency..."
                 class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                [value]="filters().currency"
                 (input)="setFilter('currency', $any($event.target).value)"
               />
             </th>
