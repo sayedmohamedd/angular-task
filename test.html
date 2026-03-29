@@ -1,0 +1,71 @@
+@if (!loading()) {
+  @for (country of displayedCountries(); track country.name.common) {
+    <!-- ROW -->
+    <tr
+      class="border-b hover:bg-gray-50 transition cursor-pointer"
+      (mousedown)="selectCountry(country)"
+      (dblclick)="handleDbClick(country)"
+      [ngClass]="{
+        'bg-blue-50 border-l-4 border-blue-500': country === selected(),
+      }"
+    >
+      <td class="px-3 py-2 md:px-4 md:py-3 w-1/5">
+        {{ country | countryField: 'name' }}
+      </td>
+      <td class="px-3 py-2 md:px-4 md:py-3 w-1/5">
+        {{ country | countryField: 'capital' }}
+      </td>
+      <td class="px-3 py-2 md:px-4 md:py-3 w-1/5">
+        {{ country | countryField: 'continent' }}
+      </td>
+      <td class="px-3 py-2 md:px-4 md:py-3 w-2/5">
+        <div class="flex items-center gap-2 min-w-0 w-full">
+          <span class="min-w-0 truncate flex-1">{{ country | countryField: 'currency' }}</span>
+          <span
+            class="shrink-0 inline-flex transition select-none"
+            [ngClass]="{
+              '-rotate-90':
+                (selected() | countryField: 'name') === (country | countryField: 'name'),
+            }"
+          >
+            <svg
+              class="w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </span>
+        </div>
+      </td>
+    </tr>
+
+    <!-- PREVIEW -->
+    @if ((selected() | countryField: 'name') === (country | countryField: 'name')) {
+      <tr class="bg-gray-50">
+        <td colspan="4" class="px-3 py-3 md:px-4 md:py-4">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-700">
+            <div><b>Subregion:</b> {{ country | countryField: 'subregion' }}</div>
+            <div><b>Languages:</b> {{ country | countryField: 'languages' }}</div>
+            <div><b>Independent:</b> {{ country | countryField: 'independent' }}</div>
+            <div><b>Status:</b> {{ country | countryField: 'status' }}</div>
+            <div><b>Continent:</b> {{ country | countryField: 'continent' }}</div>
+          </div>
+        </td>
+      </tr>
+    }
+  } @empty {
+    <tr>
+      <td colspan="4" class="text-center py-6 text-gray-400">No Data</td>
+    </tr>
+  }
+} @else {
+  <ng-container *ngTemplateOutlet="skeletonTable" />
+}

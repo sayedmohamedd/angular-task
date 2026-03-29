@@ -25,16 +25,16 @@ export class UpdateDialog {
       name: this._formBuilder.group({
         common: ['', Validators.required],
       }),
-      independent: [false],
+      independent: false,
       capital: ['', Validators.required],
-      status: [''],
+      status: '',
       subregion: ['', Validators.required],
       continents: ['', Validators.required],
       languages: ['', Validators.required],
       currencies: this._formBuilder.group({
         code: ['', Validators.required],
-        name: [''],
-        symbol: [''],
+        name: '',
+        symbol: '',
       }),
     });
   }
@@ -64,6 +64,25 @@ export class UpdateDialog {
   @Input() isOpen!: WritableSignal<boolean>;
   @Output() save = new EventEmitter<any>();
 
+  onSave() {
+    if (this.formData.valid) {
+      // PATCH Currencies
+      const code = this.formData.get('currencies')?.value.code;
+      this.formData.get('currencies')?.patchValue({
+        code: code,
+        name: this.currencies()[code],
+      });
+      //  EMIT UPDATED COUNTRY
+      this.save.emit(this.formData.value);
+      // CLOSE DIALOG
+      this.isOpen.set(false);
+    } else {
+      // MARK ALL FIELDS AS TOUCHED TO SHOW VALIDATION ERRORS
+      this.formData.markAllAsTouched();
+      this.formData.markAsDirty();
+    }
+  }
+
   ngOnInit(): void {
     // GET Currencies
     this._currencyService.getCurrencies().subscribe({
@@ -74,20 +93,5 @@ export class UpdateDialog {
         console.error(err);
       },
     });
-  }
-
-  onSave() {
-    if (this.formData.valid) {
-      const code = this.formData.get('currencies')?.value.code;
-      this.formData.get('currencies')?.patchValue({
-        code: code,
-        name: this.currencies()[code],
-      });
-      this.save.emit(this.formData.value);
-      this.isOpen.set(false);
-    } else {
-      this.formData.markAllAsTouched();
-      this.formData.markAsDirty();
-    }
   }
 }

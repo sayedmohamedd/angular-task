@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 const API_URL = 'https://restcountries.com/v3.1/all?fields=name,independent,status,currencies,capital,region,subregion,languages,continents';
+// const API_URL = 'https://restcountries.tl/v3.1/all?fields=name,independent,status,currencies,capital,region,subregion,languages,continents';
 
 @Injectable({
   providedIn: 'root',

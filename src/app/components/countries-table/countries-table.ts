@@ -88,7 +88,6 @@ export class CountriesTable implements OnInit {
   // DISPLAYED DATA (مع pagination)
   displayedCountries = computed(() => {
     const data = this.filteredSortedCountries();
-
     const start = (this.page() - 1) * this.pageSize();
     const end = start + this.pageSize();
     return data.slice(start, end);
@@ -170,7 +169,6 @@ export class CountriesTable implements OnInit {
   }
 
   handleLimitChange(event: any) {
-    // using + operator to convert string to number
     this.changePageSize(+event.target.value);
   }
 
@@ -183,9 +181,14 @@ export class CountriesTable implements OnInit {
     this.selected.set(country);
   }
 
-  handleDbClick(country:Country){
-    this.selectCountry(country)
-    this.showUpdateDialog.set(true)
+  // handleDbClick(country:Country){
+  //   this.selectCountry(country)
+  //   this.showUpdateDialog.set(true)
+  // }
+
+  handleDbClick(country: Country) {
+    this.selected.set(country);
+    queueMicrotask(() => this.showUpdateDialog.set(true));
   }
 
   // DELETE Country
@@ -232,7 +235,8 @@ export class CountriesTable implements OnInit {
       },
       error: (err: any) => {
         this.loading.set(false);
-        this.error.set(err?.message || 'Something went Wrong');
+        // this.error.set(err?.message || 'Something went Wrong');
+        this.error.set('Something went Wrong refresh the page');
         console.error(err);
       },
       complete: () => {

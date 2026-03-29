@@ -186,12 +186,21 @@
         </thead>
         <!-- TABLE BODY -->
         <tbody class="text-sm text-gray-700">
-          @if (!loading()) {
+
+          @if(error()) {
+            <tr>
+              <td colspan="4" class="text-center py-6 text-red-500">
+                {{ error() }}
+              </td>
+            </tr>
+          } @else if (loading()) {
+            <ng-container *ngTemplateOutlet="skeletonTable" />
+          }@else{
             @for (country of displayedCountries(); track country.name.common) {
               <!-- ROW -->
               <tr
                 class="border-b hover:bg-gray-50 transition cursor-pointer"
-                (mousedown)="selectCountry(country)"
+                (click)="selectCountry(country)"
                 (dblclick)="handleDbClick(country)"
                 [ngClass]="{
                   'bg-blue-50 border-l-4 border-blue-500': country === selected(),
@@ -256,8 +265,6 @@
                 <td colspan="4" class="text-center py-6 text-gray-400">No Data</td>
               </tr>
             }
-          } @else {
-            <ng-container *ngTemplateOutlet="skeletonTable"></ng-container>
           }
         </tbody>
       </table>
@@ -364,7 +371,7 @@
   </div>
 </div>
 
-<!-- Preview -->
+<!-- Preview Section -->
 <app-preview-section [country]="selected()"></app-preview-section>
 
 <!-- Charts -->
